@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopping Cart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      margin: 0;
+    }
+    .cart-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .cart-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 1.5rem;
+    }
+    .table thead th {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+    }
+    .table tbody tr:hover {
+      background-color: rgba(102, 126, 234, 0.1);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      border: none;
+    }
+    .total-row {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+      font-weight: bold;
+    }
+    .empty-cart {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .quantity-btn:hover {
+      background: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="cart-container">
+    <div class="cart-header">
+      <h1 class="h3 mb-0">🛒 Shopping Cart</h1>
+      <p class="mb-0 opacity-75">Review your selected books</p>
+    </div>
+
+    <div class="cart-body p-4">
+      <div id="cartContent">
+        <!-- Cart items will be loaded here -->
+      </div>
+    </div>
+
+    <div class="cart-footer p-4 border-top">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <a href="Catalogue.html" target="_parent" class="btn btn-outline-primary">
+            ← Continue Shopping
+          </a>
+        </div>
+        <div id="cartActions" style="display: none;">
+          <button class="btn btn-danger me-2" onclick="clearCart()">Clear Cart</button>
+          <button class="btn btn-success" onclick="checkout()">Proceed to Checkout →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Load cart on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCart();
+    });
+
+    function loadCart() {
+      let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+      let cartContent = document.getElementById('cartContent');
+      let cartActions = document.getElementById('cartActions');
+
+      if (cart.length === 0) {
+        cartContent.innerHTML = `
+          <div class="empty-cart">
+            <h4>Your cart is empty</h4>
+            <p>Browse our catalogue to add some books to your cart.</p>
+            <a href="Catalogue.html" target="_parent" class="btn btn-primary">Browse Books</a>
+          </div>
+        `;
+        cartActions.style.display = 'none';
+      } else {
+        let total = 0;
+        let tableHTML = `
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Book</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        cart.forEach((item, index) => {
+          let itemTotal = item.price * item.quantity;
+          total += itemTotal;
+          
+          tableHTML += `
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="me-3" style="font-size: 2rem;">📚</div>
+                  <div>
+                    <h6 class="mb-0">${item.name}</h6>
+                  </div>
+                </div>
+              </td>
+              <td>$${item.price.toFixed(2)}</td>
+              <td>
+                <div class="quantity-controls">
+                  <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                  <span class="mx-2">${item.quantity}</span>
+                  <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                </div>
+              </td>
+              <td><strong>$${itemTotal.toFixed(2)}</strong></td>
+              <td>
+                <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${index})">Remove</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        tableHTML += `
+              <tr class="total-row">
+                <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                <td colspan="2"><strong>$${total.toFixed(2)}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        `;
+
+        cartContent.innerHTML = tableHTML;
+        cartActions.style.display = 'block';
+      }
+    }
+
+    function updateQuantity(index, change) {
+      let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+      
+      if (cart[index]) {
+        cart[index].quantity += change;
+        
+        if (cart[index].quantity <= 0) {
+          cart.splice(index, 1);
+        }
+        
+        localStorage.setItem('bookCart', JSON.stringify(cart));
+        loadCart();
+      }
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+      
+      if (confirm('Are you sure you want to remove this item from your cart?')) {
+        cart.splice(index, 1);
+        localStorage.setItem('bookCart', JSON.stringify(cart));
+        loadCart();
+      }
+    }
+
+    function clearCart() {
+      if (confirm('Are you sure you want to clear your entire cart?')) {
+        localStorage.removeItem('bookCart');
+        loadCart();
+      }
+    }
+
+    function checkout() {
+      let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+      
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+
+      let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      let itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      alert(`Thank you for your purchase!
+      
+Items: ${itemCount}
+Total: $${total.toFixed(2)}
+
+Your order has been processed successfully.`);
+      
+      // Clear cart after checkout
+      localStorage.removeItem('bookCart');
+      loadCart();
+    }
+  </script>
+</body>
+</html>

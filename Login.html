@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 1rem;
+    }
+    .login-card {
+      border: 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,.15);
+      border-radius: 1rem;
+      overflow: hidden;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .login-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 1.5rem;
+    }
+    .form-floating > label {
+      color: rgba(0,0,0,.6);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      transition: transform 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .helper-links a {
+      text-decoration: none;
+      color: #667eea;
+    }
+    .helper-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card login-card">
+      <div class="login-header text-center">
+        <h1 class="h4 mb-0">Sign in to your account</h1>
+        <p class="mb-0 small opacity-75">Welcome back!</p>
+      </div>
+
+      <div class="card-body p-4">
+        <form action="Frame3.html" method="post" target="_parent">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="loginId" name="login" placeholder="Login Id" required>
+            <label for="loginId">Username or Email</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="password" name="pwd" placeholder="Password" required>
+            <label for="password">Password</label>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-3 helper-links">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe">
+              <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            <a href="#" class="small">Forgot password?</a>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-footer text-center py-3 helper-links">
+        <small>Don't have an account? <a href="Registration.html" target="_parent">Create one here</a></small>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginId').value;
+      const password = document.getElementById('password').value;
+      
+      if (username && password) {
+        alert('Login successful! Welcome ' + username);
+        window.parent.location.href = 'Frame3.html';
+      } else {
+        alert('Please fill in all fields');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Catalogue</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      margin: 0;
+    }
+    .catalogue-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    .book-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      height: 100%;
+    }
+    .book-card:hover {
+      transform: translateY(-5px);
+    }
+    .book-image {
+      height: 200px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem;
+    }
+    .btn-add-cart {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      transition: transform 0.3s ease;
+    }
+    .btn-add-cart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .price {
+      font-weight: bold;
+      color: #28a745;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="catalogue-container">
+    <div class="text-center mb-4">
+      <h1 class="display-4 fw-bold text-primary">Book Catalogue</h1>
+      <p class="lead">Discover your next favorite read</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Java Book -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card book-card">
+          <div class="book-image">📘</div>
+          <div class="card-body">
+            <h5 class="card-title">Java Programming</h5>
+            <p class="card-text">Complete guide to Java programming with practical examples and exercises.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">$42.25</span>
+              <button class="btn btn-primary btn-add-cart" onclick="addToCart('Web Development', 42.25)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Database Book -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card book-card">
+          <div class="book-image">📕</div>
+          <div class="card-body">
+            <h5 class="card-title">Database Systems</h5>
+            <p class="card-text">Comprehensive guide to database design, SQL, and modern database technologies.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">$45.00</span>
+              <button class="btn btn-primary btn-add-cart" onclick="addToCart('Database Systems', 45.00)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="Cart.html" target="_parent" class="btn btn-success btn-lg">View Cart</a>
+      <a href="Frame3.html" target="_parent" class="btn btn-outline-primary btn-lg ms-2">Continue Shopping</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Cart functionality
+    function addToCart(bookName, price) {
+      // Get existing cart from localStorage or initialize empty array
+      let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+      
+      // Check if book already exists in cart
+      let existingBook = cart.find(item => item.name === bookName);
+      
+      if (existingBook) {
+        existingBook.quantity += 1;
+      } else {
+        cart.push({
+          name: bookName,
+          price: price,
+          quantity: 1
+        });
+      }
+      
+      // Save updated cart to localStorage
+      localStorage.setItem('bookCart', JSON.stringify(cart));
+      
+      // Show success message
+      alert(`${bookName} added to cart!`);
+      
+      // Update cart count if there's a cart counter element
+      updateCartCount();
+    }
+    
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
+      let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      // If there's a cart counter element, update it
+      let cartCounter = document.getElementById('cartCount');
+      if (cartCounter) {
+        cartCounter.textContent = totalItems;
+      }
+    }
+    
+    // Initialize cart count on page load
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</body>
+</html> class="d-flex justify-content-between align-items-center">
+              <span class="price">$35.50</span>
+              <button class="btn btn-primary btn-add-cart" onclick="addToCart('Java', 35.50)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C++ Book -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card book-card">
+          <div class="book-image">📗</div>
+          <div class="card-body">
+            <h5 class="card-title">C++ Programming</h5>
+            <p class="card-text">Master C++ programming from basics to advanced concepts with real-world applications.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">$40.50</span>
+              <button class="btn btn-primary btn-add-cart" onclick="addToCart('C++', 40.50)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Python Book -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card book-card">
+          <div class="book-image">📙</div>
+          <div class="card-body">
+            <h5 class="card-title">Python Programming</h5>
+            <p class="card-text">Learn Python programming with hands-on projects and modern development practices.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">$32.00</span>
+              <button class="btn btn-primary btn-add-cart" onclick="addToCart('Python', 32.00)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JavaScript Book -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card book-card">
+          <div class="book-image">📒</div>
+          <div class="card-body">
+            <h5 class="card-title">JavaScript Mastery</h5>
+            <p class="card-text">Complete JavaScript guide covering ES6+ features and modern web development.</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="price">$38.75</span>
+              <button class="btn btn-primary btn-add-cart" onclick="addToCart('JavaScript', 38.75)">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Web Development Book -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card book-card">
+          <div class="book-image">📔</div>
+          <div class="card-body">
+            <h5 class="card-title">Web Development</h5>
+            <p class="card-text">Full-stack web development using HTML, CSS,

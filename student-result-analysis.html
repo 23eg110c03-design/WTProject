@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Grade Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      margin: 0;
+    }
+    .calculator-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .calculator-header {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      transition: transform 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .required::after {
+      content: " *";
+      color: #dc3545;
+      margin-left: .125rem;
+    }
+    .result-badge {
+      font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-weight: bold;
+    }
+    .grade-display {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+    <div class="calculator-header">
+      <h1 class="h3 mb-0">Student Grade Calculator</h1>
+      <p class="mb-0 opacity-75">Calculate your academic performance</p>
+    </div>
+
+    <div class="p-4">
+      <form id="gradeForm" class="needs-validation" novalidate>
+        <div class="mb-4">
+          <label for="studentName" class="form-label required">Student Name</label>
+          <input type="text" class="form-control" id="studentName" name="studentName" required>
+          <div class="invalid-feedback">Please enter the student name.</div>
+        </div>
+
+        <h5 class="mb-3">Subject Marks (Out of 100)</h5>
+        
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <label for="webTech" class="form-label required">Web Technologies</label>
+            <input type="number" class="form-control" id="webTech" name="webTech" min="0" max="100" required>
+            <div class="invalid-feedback">Enter marks between 0-100.</div>
+          </div>
+          <div class="col-md-4">
+            <label for="compGraphics" class="form-label required">Computer Graphics</label>
+            <input type="number" class="form-control" id="compGraphics" name="compGraphics" min="0" max="100" required>
+            <div class="invalid-feedback">Enter marks between 0-100.</div>
+          </div>
+          <div class="col-md-4">
+            <label for="softTesting" class="form-label required">Software Testing</label>
+            <input type="number" class="form-control" id="softTesting" name="softTesting" min="0" max="100" required>
+            <div class="invalid-feedback">Enter marks between 0-100.</div>
+          </div>
+        </div>
+
+        <div class="d-grid d-sm-flex gap-2 mb-4">
+          <button type="submit" class="btn btn-primary btn-lg">Calculate Results</button>
+          <button type="reset" class="btn btn-outline-secondary btn-lg">Reset</button>
+        </div>
+      </form>
+
+      <!-- Results Section -->
+      <div id="resultsSection" class="grade-display" style="display: none;">
+        <h5 class="mb-3">Results Summary</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Total Marks</label>
+              <input type="text" class="form-control" id="totalMarks" readonly>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Percentage</label>
+              <input type="text" class="form-control" id="percentage" readonly>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Result Status</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="text" class="form-control" id="resultStatus" readonly>
+                <span id="resultBadge" class="result-badge bg-secondary">-</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Grade</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="text" class="form-control" id="grade" readonly>
+                <span id="gradeBadge" class="result-badge bg-secondary">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="feedback" class="alert mt-3" style="display: none;"></div>
+      </div>
+    </div>
+
+    <div class="p-4 border-top bg-light">
+      <div class="row text-center">
+        <div class="col-md-3">
+          <small class="text-muted">
+            <strong>Pass:</strong> Each subject ≥ 40 marks
+          </small>
+        </div>
+        <div class="col-md-3">
+          <small class="text-muted">
+            <strong>Distinction:</strong> ≥ 70% average
+          </small>
+        </div>
+        <div class="col-md-3">
+          <small class="text-muted">
+            <strong>First Class:</strong> 60-69% average
+          </small>
+        </div>
+        <div class="col-md-3">
+          <small class="text-muted">
+            <strong>Second Class:</strong> 50-59% average
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('gradeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (!this.checkValidity()) {
+        this.classList.add('was-validated');
+        return;
+      }
+
+      calculateResults();
+    });
+
+    document.getElementById('gradeForm').addEventListener('reset', function() {
+      document.getElementById('resultsSection').style.display = 'none';
+      this.classList.remove('was-validated');
+      resetBadges();
+    });
+
+    function calculateResults() {
+      // Get input values
+      const studentName = document.getElementById('studentName').value;
+      const webTech = parseInt(document.getElementById('webTech').value);
+      const compGraphics = parseInt(document.getElementById('compGraphics').value);
+      const softTesting = parseInt(document.getElementById('softTesting').value);
+
+      // Calculate totals
+      const totalMarks = webTech + compGraphics + softTesting;
+      const percentage = (totalMarks / 3).toFixed(2);
+
+      // Determine if student passed (each subject must be ≥ 40)
+      const passedAll = webTech >= 40 && compGraphics >= 40 && softTesting >= 40;
+
+      // Determine result and grade
+      let resultStatus, grade, badgeClass, gradeClass, feedback;
+
+      if (percentage >= 70 && passedAll) {
+        resultStatus = "Distinction";
+        grade = "A+";
+        badgeClass = "bg-success";
+        gradeClass = "bg-success";
+        feedback = `Excellent work, ${studentName}! You've achieved distinction level performance.`;
+      } else if (percentage >= 60 && passedAll) {
+        resultStatus = "First Class";
+        grade = "A";
+        badgeClass = "bg-primary";
+        gradeClass = "bg-primary";
+        feedback = `Great job, ${studentName}! You've secured first class results.`;
+      } else if (percentage >= 50 && passedAll) {
+        resultStatus = "Second Class";
+        grade = "B";
+        badgeClass = "bg-info text-dark";
+        gradeClass = "bg-info text-dark";
+        feedback = `Well done, ${studentName}! You've passed with second class.`;
+      } else if (percentage >= 40 && passedAll) {
+        resultStatus = "Pass Class";
+        grade = "C";
+        badgeClass = "bg-warning text-dark";
+        gradeClass = "bg-warning text-dark";
+        feedback = `Good effort, ${studentName}! You've successfully passed all subjects.`;
+      } else {
+        resultStatus = "Fail";
+        grade = "F";
+        badgeClass = "bg-danger";
+        gradeClass = "bg-danger";
+        
+        let failedSubjects = [];
+        if (webTech < 40) failedSubjects.push("Web Technologies");
+        if (compGraphics < 40) failedSubjects.push("Computer Graphics");
+        if (softTesting < 40) failedSubjects.push("Software Testing");
+        
+        if (failedSubjects.length > 0) {
+          feedback = `${studentName}, you need to improve in: ${failedSubjects.join(", ")}. Each subject requires minimum 40 marks to pass.`;
+        } else {
+          feedback = `${studentName}, your overall percentage needs improvement to pass.`;
+        }
+      }
+
+      // Display results
+      document.getElementById('totalMarks').value = `${totalMarks} / 300`;
+      document.getElementById('percentage').value = `${percentage}%`;
+      document.getElementById('resultStatus').value = resultStatus;
+      document.getElementById('grade').value = grade;
+
+      // Update badges
+      const resultBadge = document.getElementById('resultBadge');
+      const gradeBadge = document.getElementById('gradeBadge');
+      
+      resultBadge.textContent = resultStatus;
+      resultBadge.className = `result-badge ${badgeClass}`;
+      
+      gradeBadge.textContent = grade;
+      gradeBadge.className = `result-badge ${gradeClass}`;
+
+      // Show feedback
+      const feedbackElement = document.getElementById('feedback');
+      feedbackElement.textContent = feedback;
+      feedbackElement.className = `alert mt-3 ${badgeClass.includes('danger') ? 'alert-danger' : 'alert-success'}`;
+      feedbackElement.style.display = 'block';
+
+      // Show results section
+      document.getElementById('resultsSection').style.display = 'block';
+    }
+
+    function resetBadges() {
+      document.getElementById('resultBadge').textContent = '-';
+      document.getElementById('resultBadge').className = 'result-badge bg-secondary';
+      document.getElementById('gradeBadge').textContent = '-';
+      document.getElementById('gradeBadge').className = 'result-badge bg-secondary';
+      document.getElementById('feedback').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
